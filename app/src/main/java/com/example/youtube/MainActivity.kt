@@ -16,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var videoAdapter: VideoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +25,16 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, PlayerFragment())
             .commit()
+
+        videoAdapter = VideoAdapter()
+
+        findViewById<RecyclerView>(R.id.mainRecyclerView).apply {
+            adapter = videoAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+
+        getVideoList()
+
 
     }
 
@@ -45,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                         response.body()?.let { videoDto ->
                             Log.d("MainActivity", videoDto.toString())
 
-
+                            videoAdapter.submitList(videoDto.videos)
                         }
 
                     }
